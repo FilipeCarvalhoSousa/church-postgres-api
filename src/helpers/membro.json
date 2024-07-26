@@ -1,0 +1,33 @@
+{
+    "nome": "Filipe Carvalho de Sousa",
+    "situacao": "Ativo",
+    "email": "filipecarvalhosousa@gmail.com",
+    "telefone": 61981747292,
+    "endereco": {
+        "rua": "",
+        "bairro": "",
+        "cidade": "",
+        "estado": "",
+        "país": "Brasil"
+    },
+    "data_nascimento": "25/01/1991",
+    "departamento": [
+        {
+            "titulo": "Cadetes"
+        }
+    ],
+    "cargo": [
+        {
+            "titulo": "string",
+            "departamento": "string"
+        }
+    ],
+    "estado_civil": "Casado",
+    "conjuge": {
+        "id": 2
+    },
+    "data_casamento": "04/03/2022",
+    "filhos": [
+        {}
+    ]
+}
