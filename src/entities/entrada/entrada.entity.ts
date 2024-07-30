@@ -18,7 +18,7 @@ export class Entrada {
   tipo: string;
 
   @Column({ nullable: false })
-  forma: string;
+  forma_pagamento: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   valor: number;

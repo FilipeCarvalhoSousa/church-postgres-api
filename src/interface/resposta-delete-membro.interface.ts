@@ -1,4 +1,4 @@
-import { Membro } from 'src/entities/membro/membro.entity';
+import { Membro } from './../entities/membro/membro.entity';
 
 export interface RespostaDeleteMembro {
   qntMembroRemovido: number;

@@ -4,16 +4,13 @@ export class SaidaDto {
   id: number;
 
   @ApiPropertyOptional()
-  readonly membro: {
-    id: number;
-    nome: string;
-  };
+  readonly recebedor: string;
 
   @ApiPropertyOptional()
-  readonly tipo: string;
+  readonly descricao: string;
 
   @ApiPropertyOptional()
-  readonly forma: string;
+  readonly forma_pagamento: string;
 
   @ApiPropertyOptional()
   readonly valor: number;
@@ -25,6 +22,5 @@ export class SaidaDto {
     ano: number;
   };
 
-  @ApiPropertyOptional()
   readonly data: Date;
 }

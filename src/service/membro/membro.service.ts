@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { FilhoDto } from './../../dto/membro/filho.dto';
 import { MembroDto } from './../../dto/membro/membro.dto';
 import { Membro } from './../../entities/membro/membro.entity';
-import { RespostaDeleteMembro } from './../../interface/resposta-delete-membro';
+import { RespostaDeleteMembro } from '../../interface/resposta-delete-membro.interface';
 import { MembroRepository } from './../../repository/membro/membro.repository';
 
 @Injectable()
@@ -49,7 +49,9 @@ export class MembroService {
       const membroId = await this.membroRepository.buscarMembroPorId(membroAlterado.conjuge.id);
       await this.atualizarConjuge(membroId.id, membroAlterado);
 
-      const conjugeEncontrado = await this.membroRepository.buscarMembroPorId(membroAlterado.conjuge.id);
+      const conjugeEncontrado = await this.membroRepository.buscarMembroPorId(
+        membroAlterado.conjuge.id,
+      );
       membroEncontrado.conjuge = {
         id: conjugeEncontrado.id,
         nome: conjugeEncontrado.nome,
@@ -83,12 +85,12 @@ export class MembroService {
     if (!membroCadastrado) {
       throw new NotFoundException('Membro não encontrado');
     }
-
     return await this.membroRepository.deletarMembroPorId(idMembro);
   }
 
   async buscarMembrosPeloEstadoCivil(estadoCivil: number): Promise<Membro[]> {
-    const membrosEncontrados = await this.membroRepository.buscarMembrosPeloEstadoCivil(estadoCivil);
+    const membrosEncontrados =
+      await this.membroRepository.buscarMembrosPeloEstadoCivil(estadoCivil);
     if (!membrosEncontrados.length) {
       throw new NotFoundException('Nenhum membro encontrado para o estado civil informado');
     }

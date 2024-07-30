@@ -1,0 +1,21 @@
+### Getall Busca todos os membros
+GET http://localhost:3002/entrada
+
+### alterarEntrada()
+### Put Busca todos os membros
+POST http://localhost:3002/entrada
+Content-Type: application/json
+{
+    "membro": {
+        "id": 2
+    },
+    "descricao": "Oferta",
+    "tipo": "",
+    "forma": "pix",
+    "valor": 500.80,
+    "data_operacao": {
+        "dia": 12,
+        "mes": 12,
+        "ano": 2022
+    }
+}

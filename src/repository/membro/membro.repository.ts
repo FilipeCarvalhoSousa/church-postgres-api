@@ -3,7 +3,7 @@ import { Membro } from './../../entities/membro/membro.entity';
 import { DataSource, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { MembroDto } from './../../dto/membro/membro.dto';
-import { RespostaDeleteMembro } from 'src/interface/resposta-delete-membro';
+import { RespostaDeleteMembro } from './../../interface/resposta-delete-membro.interface';
 
 @Injectable()
 export class MembroRepository extends Repository<Membro> {
@@ -30,7 +30,8 @@ export class MembroRepository extends Repository<Membro> {
   async deletarMembroPorId(idMembro: number): Promise<RespostaDeleteMembro> {
     const respostaDelete = await this.delete(idMembro);
     const qntMembroRemovido = respostaDelete.affected > 0 ? 1 : 0;
-    const message = respostaDelete.affected > 0 ? 'Membro removido com sucesso' : 'Membro não encontrado';
+    const message =
+      respostaDelete.affected > 0 ? 'Membro removido com sucesso' : 'Membro não encontrado';
     const membros = await this.buscarTodosMembros();
 
     return { qntMembroRemovido, message, membros };

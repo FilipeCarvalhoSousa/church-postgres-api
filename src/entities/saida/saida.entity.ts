@@ -5,17 +5,14 @@ export class Saida {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('jsonb', { nullable: false })
-  membro: {
-    id: number;
-    nome: string;
-  };
+  @Column({ nullable: false })
+  recebedor: string;
 
   @Column({ nullable: false })
-  tipo: string;
+  descricao: string;
 
   @Column({ nullable: false })
-  forma: string;
+  forma_pagamento: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   valor: number;

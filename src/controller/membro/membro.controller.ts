@@ -3,7 +3,7 @@ import { Membro } from './../../entities/membro/membro.entity';
 import { MembroService } from './../../service/membro/membro.service';
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { MembroDto } from './../../dto/membro/membro.dto';
-import { RespostaDeleteMembro } from './../../interface/resposta-delete-membro';
+import { RespostaDeleteMembro } from '../../interface/resposta-delete-membro.interface';
 
 @ApiTags('Membros')
 @Controller('membros')
@@ -55,7 +55,10 @@ export class MembroController {
     status: 422,
     description: 'Os dados informados estão inválidos',
   })
-  async alterarMembro(@Param('idMembro') idMembro: number, @Body() dadosMembro: MembroDto): Promise<Membro> {
+  async alterarMembro(
+    @Param('idMembro') idMembro: number,
+    @Body() dadosMembro: MembroDto,
+  ): Promise<Membro> {
     return await this.membroService.atualizarMembro(idMembro, dadosMembro);
   }
 
@@ -79,7 +82,7 @@ export class MembroController {
     name: 'estadoCivil',
     type: 'number',
     description: 'number',
-    example: '1',
+    example: '1 - Solteiro, 2 - CASADO, 3 - SEPARADO, 4 - DIVORCIADO e 5 - VIÚVO',
   })
   @ApiResponse({ status: 200, description: 'Busca um membro por Id' })
   @ApiResponse({ status: 400, description: 'Requisição inválida' })
@@ -97,7 +100,7 @@ export class MembroController {
     name: 'situacao',
     type: 'number',
     description: 'number',
-    example: '1',
+    example: '1 - ATIVO, 2 - CONGREGADO, 3 - INATIVO',
   })
   @ApiResponse({ status: 200, description: 'Busca um membro pela situacao' })
   @ApiResponse({ status: 400, description: 'Requisição inválida' })

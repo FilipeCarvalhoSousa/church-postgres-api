@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { FinanceiroModule } from './modules/financeiro.module';
 import { MembroModule } from './modules/membro.module';
-import { EntradaModule } from './modules/entrada.module';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { EntradaModule } from './modules/entrada.module';
       synchronize: true, // Use isso apenas em desenvolvimento
     }),
     MembroModule,
-    EntradaModule,
+    FinanceiroModule,
   ],
   controllers: [],
   providers: [],
