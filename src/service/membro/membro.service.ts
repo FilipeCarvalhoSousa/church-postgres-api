@@ -4,10 +4,14 @@ import { MembroDto } from './../../dto/membro/membro.dto';
 import { Membro } from './../../entities/membro/membro.entity';
 import { RespostaDeleteMembro } from '../../interface/resposta-delete-membro.interface';
 import { MembroRepository } from './../../repository/membro/membro.repository';
+import { DepartamentoService } from '../departamento/departamento.service';
 
 @Injectable()
 export class MembroService {
-  constructor(private readonly membroRepository: MembroRepository) {}
+  constructor(
+    private readonly membroRepository: MembroRepository,
+    private readonly departamentoService: DepartamentoService,
+  ) {}
 
   async buscarTodosMembros(): Promise<Membro[]> {
     return this.membroRepository.buscarTodosMembros();
@@ -24,6 +28,21 @@ export class MembroService {
   async criarMembro(novoMembro: MembroDto): Promise<Membro> {
     const membro = await this.membroRepository.criarMembro(novoMembro);
 
+    /**
+     * Validação de campos data_casamento e conjuge,
+     * Não permitir inclusão quando o membro tiver estado civil 1
+     *
+     * 
+     if (novoMembro.estado_civil !== 2) {
+      if (novoMembro.conjuge || novoMembro.data_casamento) {
+        console.log('novoMembro', novoMembro);
+        throw new BadRequestException(
+          'Conjuge e/ou data de casamento deverá ser preenchido somente se o membro for casado',
+        );
+      }
+    }
+     */
+
     if (novoMembro.conjuge && novoMembro.conjuge.id) {
       const membroId = await this.membroRepository.buscarMembroPorId(novoMembro.conjuge.id);
       await this.atualizarConjuge(membroId.id, novoMembro);
@@ -32,6 +51,17 @@ export class MembroService {
       membro.conjuge.nome = membroId.nome;
       membro.conjuge.telefone = membroId.telefone;
       membro.conjuge.email = membroId.email;
+    }
+
+    const membroDepartamento = {
+      id: membro.id,
+      nome: membro.nome,
+    };
+    for (const departamento of membro.departamento) {
+      await this.departamentoService.incluirMembrosNoDepartamento(
+        departamento.id,
+        membroDepartamento,
+      );
     }
 
     const membroSalvo = await this.membroRepository.salvarMembro(membro);
@@ -112,12 +142,6 @@ export class MembroService {
   }
 
   async atualizarConjuge(idConjuge: number, membro: MembroDto): Promise<void> {
-    const conjugeAlterar = await this.membroRepository.buscarConjugePorId(idConjuge);
-
-    if (conjugeAlterar && conjugeAlterar.conjuge) {
-      throw new BadRequestException(`Conjuge com o id:${idConjuge} já cadastrado em outro membro`);
-    }
-
     const conjugeFinded = await this.membroRepository.buscarMembroPorId(idConjuge);
     if (!conjugeFinded) {
       throw new NotFoundException(`Conjuge com o Id ${idConjuge} não encontrado`);

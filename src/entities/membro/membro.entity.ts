@@ -31,7 +31,8 @@ export class Membro {
 
   @Column('jsonb')
   departamento: {
-    titulo: string;
+    id: number;
+    nome: string;
   }[];
 
   @Column('jsonb', { nullable: false })
@@ -43,7 +44,7 @@ export class Membro {
   @Column()
   estado_civil: number;
 
-  @Column('jsonb', { nullable: false })
+  @Column('jsonb', { nullable: true })
   conjuge: {
     id: number;
     nome: string;
@@ -51,7 +52,7 @@ export class Membro {
     telefone: string;
   };
 
-  @Column()
+  @Column({ nullable: true })
   data_casamento: string;
 
   @Column('jsonb')

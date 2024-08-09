@@ -22,7 +22,7 @@ Content-Type: application/json
         "estado": "",
         "país": "Brasil"
     },
-    "data_nascimento": "25/01/1991",
+    "data_nascimento": "1991-01-25",
     "departamento": [
         {
             "titulo": "Cadetes"
@@ -38,7 +38,7 @@ Content-Type: application/json
     "conjuge": {
         "id": 2
     },
-    "data_casamento": "04/03/2022",
+    "data_casamento": "2022-04-03",
     "filhos": [
         {}
     ]

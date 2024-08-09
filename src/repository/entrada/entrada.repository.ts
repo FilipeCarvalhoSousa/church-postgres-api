@@ -15,8 +15,8 @@ export class EntradaRepository extends Repository<Entrada> {
     return this.find();
   }
 
-  async criarEntrada(novaEntrada: EntradaDto): Promise<Entrada> {
-    return this.create(novaEntrada);
+  async criarEntrada(entrada: EntradaDto): Promise<Entrada> {
+    return this.create(entrada);
   }
 
   async salvarEntrada(novaEntrada: EntradaDto): Promise<Entrada> {

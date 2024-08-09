@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { FinanceiroModule } from './modules/financeiro.module';
 import { MembroModule } from './modules/membro.module';
+import { DepartamentoModule } from './modules/departamento.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { MembroModule } from './modules/membro.module';
     }),
     MembroModule,
     FinanceiroModule,
+    DepartamentoModule,
   ],
   controllers: [],
   providers: [],

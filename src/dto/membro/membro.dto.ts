@@ -35,7 +35,8 @@ export class MembroDto {
 
   @ApiProperty()
   readonly departamento: {
-    titulo: string;
+    id: number;
+    nome: string;
   }[];
 
   @ApiProperty()
