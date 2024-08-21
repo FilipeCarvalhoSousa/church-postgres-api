@@ -1,5 +1,4 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { FilhoDto } from './../../dto/membro/filho.dto';
 import { MembroDto } from './../../dto/membro/membro.dto';
 import { Membro } from './../../entities/membro/membro.entity';
 import { RespostaDeleteMembro } from '../../interface/resposta-delete-membro.interface';
@@ -83,31 +82,21 @@ export class MembroService {
     return membroSalvo;
   }
 
-  async atualizarMembro(idMembro: number, membroAlterado: Membro): Promise<Membro> {
+  async atualizarMembro(idMembro: number, membroAlterado: MembroDto): Promise<Membro> {
     const membroEncontrado = await this.membroRepository.buscarMembroPorId(idMembro);
     if (!membroEncontrado) {
       throw new NotFoundException('Membro não encontrado para o ID informado');
     }
 
-    if (membroAlterado.conjuge && membroAlterado.conjuge.id) {
+    if (membroAlterado.conjugeId) {
       const conjugeEncontrado = await this.membroRepository.buscarMembroPorId(
-        membroAlterado.conjuge.id,
+        membroAlterado.conjugeId,
       );
       membroEncontrado.conjuge = {
         id: conjugeEncontrado.id,
         nome: conjugeEncontrado.nome,
       };
-
-      const membro = await this.membroRepository.buscarConjugePorId(membroAlterado.conjuge.id);
-      if (membro) {
-        membro.conjuge = null;
-        await this.membroRepository.save(membro);
-      }
-    } else {
-      membroEncontrado.conjuge = {
-        id: membroAlterado.conjuge.id,
-        nome: membroAlterado.conjuge.nome,
-      };
+      this.atualizarConjuge(membroAlterado.conjugeId, membroAlterado);
     }
 
     membroEncontrado.cargo = membroAlterado.cargo;
@@ -163,27 +152,32 @@ export class MembroService {
   }
 
   async atualizarConjuge(idConjuge: number, membro: MembroDto): Promise<void> {
-    const conjugeFinded = await this.membroRepository.buscarMembroPorId(idConjuge);
-    /* if (!conjugeFinded) {
-      throw new NotFoundException(`Conjuge com o Id ${idConjuge} não encontrado`);
-    } */
+    const membroRecebido = membro;
 
-    if (!conjugeFinded.conjuge) {
-      conjugeFinded.conjuge = {
-        id: null,
-        nome: '',
-      };
+    let conjuge = null;
+    if (idConjuge === membroRecebido.id) {
+      throw new BadRequestException('O cônjuge não pode ser o próprio membro.');
     }
 
-    conjugeFinded.conjuge = {
-      id: membro.id,
+    conjuge = await this.membroRepository.buscarMembroPorId(membroRecebido.conjugeId);
+    if (!conjuge) {
+      throw new NotFoundException(`Cônjuge com ID ${membroRecebido.conjugeId} não encontrado`);
+    }
+
+    const membroConjuge = await this.membroRepository.buscarConjugePorId(membroRecebido.conjugeId);
+    if (membroConjuge) {
+      membroConjuge.conjuge = null;
+      await this.membroRepository.save(membroConjuge);
+    }
+
+    conjuge.conjuge = {
+      id: membro.id, // Agora o id do novo membro está disponível
       nome: membro.nome,
     };
-
-    await this.membroRepository.atulizarConjuge(conjugeFinded.id, conjugeFinded.conjuge);
+    await this.membroRepository.salvarMembro(conjuge);
   }
 
-  async atualizarFilho(idFilho: number, novoFilho: FilhoDto): Promise<FilhoDto> {
+  /* async atualizarFilho(idFilho: number, novoFilho: FilhoDto): Promise<FilhoDto> {
     const filhoEncontrado = await this.membroRepository.buscarMembroPorId(idFilho);
     if (!filhoEncontrado) {
       throw new BadRequestException(`Filho com o Id ${idFilho} não encontrado`);
@@ -195,7 +189,7 @@ export class MembroService {
     return filhoEncontrado;
   }
 
-  /* async buscarConjuge(memberId: number): Promise<Membro> {
+  async buscarConjuge(memberId: number): Promise<Membro> {
     const conjuge = await this.membroRepository.buscarConjugePorId(memberId);
 
     if (!conjuge) {
@@ -203,21 +197,4 @@ export class MembroService {
     }
     return conjuge;
   } */
-
-  async buscarConjuges(conjugeId: number): Promise<void> {
-    console.log('conjugeId', conjugeId);
-
-    /**
-     * Buscar na lista de membros, se o conjuge existe.
-     * Se existir, trazer o membro e limpar o conjuge dele;
-     */
-    const conjuge = await this.membroRepository.buscarConjugePorId(conjugeId);
-
-    if (conjuge) {
-      console.log('ifCon');
-
-      await this.membroRepository.update({ conjuge: { id: conjugeId } }, { conjuge: null });
-    }
-    /* await this.membroRepository.update({ conjuge: { id: conjuge.id } }, { conjuge: null }); */
-  }
 }
