@@ -15,11 +15,11 @@ export class MembroRepository extends Repository<Membro> {
     return this.find();
   }
 
-  async criarMembro(membro: MembroDto): Promise<Membro> {
+  async criarMembro(membro: Membro): Promise<Membro> {
     return this.create(membro);
   }
 
-  async salvarMembro(membro: MembroDto): Promise<Membro> {
+  async salvarMembro(membro: Membro): Promise<Membro> {
     return this.save(membro);
   }
 
@@ -45,10 +45,27 @@ export class MembroRepository extends Repository<Membro> {
     return this.find({ where: { situacao: situacao } });
   }
 
-  async buscarConjugePorId(conjugeId: number): Promise<Membro> {
+  async buscarConjugePorId(conjugeId: number): Promise<Partial<Membro>> {
     return this.createQueryBuilder('membro')
       .where("membro.conjuge ->> 'id' = :conjugeId", { conjugeId: conjugeId.toString() })
       .getOne();
+  }
+
+  async buscarMembrosComConjuge(idConjuge: number): Promise<Membro[] | []> {
+    return this.createQueryBuilder('membro')
+      .where("membro.conjuge ->> 'id' = conjuge.id", {
+        idConjuge,
+      })
+      .getMany();
+  }
+
+  async atualizaConjuge(conjugeId: number, newConjugeData: MembroDto): Promise<Membro> {
+    const conjuge = await this.findOne({ where: { id: conjugeId } });
+    if (conjuge) {
+      conjuge.conjuge = newConjugeData;
+      return this.save(conjuge);
+    }
+    throw new Error('Cônjuge não encontrado');
   }
 
   async atulizarConjuge(idMembro: number, membro: Partial<MembroDto>): Promise<void> {

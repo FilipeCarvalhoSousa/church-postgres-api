@@ -6,10 +6,4 @@ export class ConjugeDto {
 
   @ApiPropertyOptional()
   readonly nome: string;
-
-  @ApiPropertyOptional()
-  readonly telefone: string;
-
-  @ApiPropertyOptional()
-  readonly email: string;
 }

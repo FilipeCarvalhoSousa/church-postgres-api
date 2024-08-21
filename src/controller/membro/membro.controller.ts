@@ -1,7 +1,7 @@
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Membro } from './../../entities/membro/membro.entity';
 import { MembroService } from './../../service/membro/membro.service';
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { MembroDto } from './../../dto/membro/membro.dto';
 import { RespostaDeleteMembro } from '../../interface/resposta-delete-membro.interface';
 
@@ -47,6 +47,8 @@ export class MembroController {
     return await this.membroService.criarMembro(novoMembro);
   }
 
+  /* 
+
   @Put(':idMembro')
   @ApiOperation({ summary: 'Alterar um membro' })
   @ApiResponse({ status: 201, description: 'Inclusão realizada com sucesso' })
@@ -60,7 +62,7 @@ export class MembroController {
     @Body() dadosMembro: MembroDto,
   ): Promise<Membro> {
     return await this.membroService.atualizarMembro(idMembro, dadosMembro);
-  }
+  } */
 
   @Delete(':membroId')
   @ApiOperation({ summary: 'Deletar membro pelo Id' })

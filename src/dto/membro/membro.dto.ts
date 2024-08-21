@@ -1,9 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { ConjugeDto } from './conjuge.dto';
 import { FilhoDto } from './filho.dto';
 import { IsEnum } from 'class-validator';
 import situacao from 'src/model/enum/situação.enum';
 import estadoCivil from 'src/model/enum/estado-civil.enum';
+import sexo from 'src/model/enum/sexo.enum';
 
 export class MembroDto {
   id: number;
@@ -20,6 +20,10 @@ export class MembroDto {
 
   @ApiProperty({ type: 'bigint' })
   readonly telefone: string;
+
+  @ApiProperty()
+  @IsEnum(sexo)
+  readonly sexo: number;
 
   @ApiPropertyOptional()
   readonly endereco: {
@@ -50,7 +54,7 @@ export class MembroDto {
   readonly estado_civil: number;
 
   @ApiProperty()
-  readonly conjuge: ConjugeDto;
+  readonly conjugeId: number;
 
   @ApiProperty()
   readonly data_casamento: string;

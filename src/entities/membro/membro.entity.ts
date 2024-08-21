@@ -17,6 +17,9 @@ export class Membro {
   @Column({ type: 'bigint' })
   telefone: string;
 
+  @Column({ nullable: true })
+  sexo: number;
+
   @Column('jsonb')
   endereco: {
     rua: string;
@@ -48,8 +51,6 @@ export class Membro {
   conjuge: {
     id: number;
     nome: string;
-    email: string;
-    telefone: string;
   };
 
   @Column({ nullable: true })
