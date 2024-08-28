@@ -25,7 +25,7 @@ export class MembroService {
   }
 
   async criarMembro(novoMembro: MembroDto): Promise<Membro> {
-    const { conjugeId, ...restDto } = novoMembro;
+    const { conjugeId, estado_civil, data_casamento, ...restDto } = novoMembro;
 
     let conjuge = null;
 
@@ -37,9 +37,12 @@ export class MembroService {
       if (!conjuge) {
         throw new NotFoundException(`Cônjuge com ID ${novoMembro.conjugeId} não encontrado`);
       }
+      // Limpa o conjuge do membro que estava vinculado.
       const membro = await this.membroRepository.buscarConjugePorId(conjugeId);
       if (membro) {
         membro.conjuge = null;
+        membro.data_casamento = null;
+        membro.estado_civil = 1;
         await this.membroRepository.save(membro);
       }
     }
@@ -47,6 +50,8 @@ export class MembroService {
     const membroCriado = await this.membroRepository.criarMembro({
       ...novoMembro,
       conjuge: conjuge ? { id: conjuge.id, nome: conjuge.nome } : null,
+      estado_civil,
+      data_casamento,
     });
 
     if (novoMembro.departamento.length) {
@@ -69,6 +74,9 @@ export class MembroService {
         id: membroSalvo.id,
         nome: membroSalvo.nome,
       };
+
+      conjuge.data_casamento = data_casamento;
+      conjuge.estado_civil = estado_civil;
 
       await this.membroRepository.salvarMembro(conjuge);
 
